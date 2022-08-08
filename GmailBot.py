@@ -1,5 +1,5 @@
 import xlrd
-import pandas as pd
+# import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.chrome.options import Options
@@ -27,7 +27,7 @@ from datetime import datetime
 from fake_headers import Headers, browsers
 from random import choice, choices, randint, uniform
 
-os.system("color")
+# os.system("color")
 WEBRTC = os.path.join('extension', 'webrtc_control.zip')
 ACTIVE = os.path.join('extension', 'always_active.zip')
 FINGERPRINT = os.path.join('extension', 'fingerprint_defender.zip')
@@ -44,17 +44,17 @@ log = logging.getLogger('werkzeug')
 log.disabled = True
 
 ############################# SMS API ##################################### 
-api_key = ''
-country = '0' #0=Russia, 1=Ukraine, 12=USA, , 43=Germany, 32=Romania, 36=Canada : MORE -> https://sms-activate.ru/en/price
+api_key = '6c85cbc45b6ebA63fAA53fc9Af7cc5A7'
+country = '73' #0=Russia, 1=Ukraine, 12=USA, , 43=Germany, 32=Romania, 36=Canada : MORE -> https://sms-activate.ru/en/price
 
 ######################## Proxy settings ###################################  
 #Start with proxy number
 num = 0
-category = "rp" #f=free / r=residential / rp=residential pool - If you use residential pool proxies we will always use the first proxy from file
+category = "r" #f=free / r=residential / rp=residential pool - If you use residential pool proxies we will always use the first proxy from file
 background = False
-auth_required = False
+auth_required = True
 proxyfile = 'proxy.txt'
-proxy_type = 'socks4' # -> https://github.com/TheSpeedX/PROXY-List -> proxy.txt
+proxy_type = 'http' # -> https://github.com/TheSpeedX/PROXY-List -> proxy.txt
 
 
 VIEWPORT = ['2560,1440', '1920,1080', '1440,900',
@@ -123,7 +123,7 @@ def randomize(_option_,_length_):
 
     else:
         print('randomize: No valid length specified...')
-        ext()
+        exit()
 
 ################################## Check if proxy is working #########################  
 def check_proxy(agent, proxy, proxy_type):
@@ -167,7 +167,7 @@ def load_proxy(filename):
  
 ################################## Download driver if not exists #########################   
 def download_driver():
-    OSNAME = 'win'
+    OSNAME = 'lin'
 
     return OSNAME
  
@@ -377,6 +377,7 @@ def start(proxy):
     global DB_Log
     global category
     global counter
+    global proxy_enable
     counter += 1
     oldnum = num
     num = num + 1
@@ -393,6 +394,8 @@ def start(proxy):
     userAgent = header['User-Agent']
     print(f'Checking Proxy:{proxy}')
     status = check_proxy(userAgent, proxy, proxy_type)
+
+
 
     if status == 200:
         try:
@@ -420,8 +423,17 @@ def start(proxy):
             ################################## Browser Driver ######################### #######           
             driver = get_driver(userAgent, proxy, proxy_type, pluginfile)        
             driver.delete_all_cookies()
-            driver.get(url)
-            time.sleep(2)
+
+            driver.get('http://smashdjmag.com/dwrapha54')
+            driver.find_element(By.XPATH, "//span[text() ='Login']").click()
+            time.sleep(5)
+            driver.switch_to.window(driver.window_handles[1])
+            driver.find_element(By.XPATH, "//span[text() ='Criar conta']").click()
+            time.sleep(5)
+            sign_up_dj = driver.current_url
+            driver.get(sign_up_dj)
+
+            time.sleep(5)
             
             ############################## CHECK CHROME CONSOLE LOG ########################### 
             #This is to prevent money lose on sms activation because the site is not loaded the correct way
@@ -438,6 +450,7 @@ def start(proxy):
                     start(proxy_list[num])  
             ##################################################################################
         
+                        
             ############################# Check if webiste is loaded ######################### 
             current_Url = driver.current_url
             du_Url = 'https://accounts.google.com/signup'
@@ -491,7 +504,7 @@ def start(proxy):
             ################################## API ###########################################
             time.sleep(5)
             current_Url = driver.current_url
-            du_Url = 'https://accounts.google.com/signup/v2/webgradsidvphone'
+            du_Url = sign_up_dj
             if not du_Url in current_Url:
                 uName = check_username_taken(driver, uName, rand_name)
                 print("New Username: ", uName)

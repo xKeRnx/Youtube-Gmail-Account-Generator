@@ -45,7 +45,7 @@ log.disabled = True
 
 ############################# SMS API ##################################### 
 api_key = '6c85cbc45b6ebA63fAA53fc9Af7cc5A7'
-country = '73' #0=Russia, 1=Ukraine, 12=USA, , 43=Germany, 32=Romania, 36=Canada : MORE -> https://sms-activate.ru/en/price
+country = '0' #0=Russia, 1=Ukraine, 12=USA, , 43=Germany, 32=Romania, 36=Canada : MORE -> https://sms-activate.ru/en/price
 
 ######################## Proxy settings ###################################  
 #Start with proxy number
@@ -424,17 +424,67 @@ def start(proxy):
             driver = get_driver(userAgent, proxy, proxy_type, pluginfile)        
             driver.delete_all_cookies()
 
-            driver.get('http://smashdjmag.com/dwrapha54')
-            driver.find_element(By.XPATH, "//span[text() ='Login']").click()
-            time.sleep(5)
-            driver.switch_to.window(driver.window_handles[1])
+            driver.get('https://vote.djmag.com/')
+            
+            #Selecionando a linguagem PT
+            driver.find_element(By.XPATH, "/html/body/div[3]/div/ul/li[5]/a/div[2]").click()
+            
+            #Selecionando "Sign in with Google"
+            driver.find_element(By.XPATH, "/html/body/div[1]/div/main/div/div[4]/div/div[1]/div[2]/div[2]/a[2]/img").click()
+            
+            #Selecionando "Criar Conta"
+
             driver.find_element(By.XPATH, "//span[text() ='Criar conta']").click()
-            time.sleep(5)
-            sign_up_dj = driver.current_url
-            driver.get(sign_up_dj)
 
             time.sleep(5)
+
+            sign_up_dj = driver.current_url
             
+            
+            
+            ############ NÃO EM USO ##############
+            
+            #driver.switch_to.window(driver.window_handles[1])
+            
+            
+            
+            ##################### PÓS-GOOGLE #####################
+
+
+            #CHECKBOX
+            driver.find_element_by_xpath('/html/body/div[1]/div/main/div/div[4]/div/div[1]/div[2]/div[2]/form/div[1]/div[2]/label').click()
+
+            #SUBMIT
+            driver.find_element_by_xpath('/html/body/div[1]/div/main/div/div[4]/div/div[1]/div[2]/div[2]/form/div[2]/input').click()
+
+            #NOME,CIDADE
+            nome = driver.find_element_by_xpath('//*[@id="form-field-nome"]').click()
+            nome.send_keys(lista[0])
+
+            cidade = driver.find_element_by_xpath('//*[@id="form-field-nome"]').click()
+
+            pais = driver.find_element_by_xpath('/html/body/div[1]/div/main/div/div[4]/div/div[1]/div[2]/div[2]/form/div[1]/div[5]/select').click()
+            pais.send_keys("Estados")
+
+
+
+            #LISTA
+            lista = ["Dimitri Vegas & Like Mike","Vini Vici","Sevenn","Diego Miranda","Lost Frequencies"]
+
+            for item in lista:
+                firstname = driver.find_element_by_xpath('//*[@id="form-field-nome"]').click()
+                firstname.send_keys(item)
+                
+            
+
+            # 1- Dimitri Vegas & Like Mike
+            # 2- Vini Vici
+            # 3- Sevenn
+            # 4- Diego Miranda
+            # 5- Lost Frequencies
+
+
+
             ############################## CHECK CHROME CONSOLE LOG ########################### 
             #This is to prevent money lose on sms activation because the site is not loaded the correct way
             errconclose0 = "ERR_CONNECTION_RESET"

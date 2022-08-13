@@ -1,5 +1,4 @@
 env/
-extension/*
 accounts.txt
 database.db
 vote.py
